@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hyecorp — Display Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #B8963E;
+    --gold-light: #D4AF6A;
+    --navy: #0D1B2A;
+    --bg: #F7F5F1;
+    --surface: #FFFFFF;
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.14);
+    --text: #0D1B2A;
+    --muted: #7A7870;
+  }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 4rem;
+  }
+
+  .topbar {
+    background: var(--navy);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .topbar-logo { display: flex; align-items: center; gap: 10px; }
+
+  .logo-mark {
+    width: 32px; height: 32px;
+    border: 1px solid rgba(184,150,62,0.5);
+    display: flex; align-items: center; justify-content: center;
+    font-family: Georgia, serif; font-size: 14px; color: var(--gold-light);
+  }
+
+  .topbar-name {
+    font-size: 13px; font-weight: 500;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+
+  .topbar-tag {
+    font-size: 11px; font-weight: 300;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.15em; text-transform: uppercase;
+  }
+
+  .container { max-width: 560px; margin: 0 auto; padding: 2.5rem 1.5rem 0; }
+
+  .page-title { font-size: 22px; font-weight: 500; color: var(--navy); margin-bottom: 4px; }
+  .page-sub { font-size: 14px; color: var(--muted); font-weight: 300; margin-bottom: 2rem; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-title {
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 1.25rem; padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .field { margin-bottom: 1.1rem; }
+  .field:last-child { margin-bottom: 0; }
+
+  .field label {
+    display: block; font-size: 12px; font-weight: 500; color: var(--muted);
+    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px;
+  }
+
+  .field input {
+    width: 100%; font-family: 'Outfit', sans-serif; font-size: 15px;
+    font-weight: 400; color: var(--text); background: var(--bg);
+    border: 1px solid var(--border-strong); border-radius: 8px;
+    padding: 10px 14px; transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+
+  .field input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(184,150,62,0.12);
+  }
+
+  .field-hint { font-size: 11px; color: var(--muted); margin-top: 5px; }
+
+  .preview-card {
+    background: var(--navy); border-radius: 12px;
+    padding: 2rem 1.5rem; margin-bottom: 1rem;
+    text-align: center; position: relative; overflow: hidden;
+  }
+
+  .preview-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .preview-eyebrow {
+    font-size: 9px; letter-spacing: 0.35em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 10px;
+  }
+
+  .preview-label-strip {
+    font-size: 10px; font-weight: 400; color: var(--gold);
+    letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px;
+  }
+
+  .preview-name {
+    font-family: Georgia, serif; font-size: 1.8rem;
+    font-weight: 400; color: #FDFBF7;
+    line-height: 1.15; margin-bottom: 8px; font-style: italic;
+  }
+
+  .preview-sub {
+    font-size: 11px; color: rgba(253,251,247,0.45);
+    letter-spacing: 0.15em; text-transform: uppercase;
+  }
+
+  .btn-row { display: flex; gap: 10px; margin-top: 1.25rem; }
+
+  .btn {
+    flex: 1; padding: 12px 16px; border-radius: 8px;
+    font-family: 'Outfit', sans-serif; font-size: 13px;
+    font-weight: 500; letter-spacing: 0.05em;
+    cursor: pointer; transition: all 0.18s; border: 1px solid;
+  }
+
+  .btn-primary { background: var(--navy); color: #FDFBF7; border-color: var(--navy); }
+  .btn-primary:hover { background: #162336; }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-standby { background: transparent; color: var(--muted); border-color: var(--border-strong); }
+  .btn-standby:hover { background: var(--bg); color: var(--text); }
+
+  .preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .preset-btn {
+    padding: 10px 12px; border: 1px solid var(--border-strong);
+    border-radius: 8px; background: var(--bg);
+    cursor: pointer; text-align: left; transition: all 0.15s;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .preset-btn:hover { border-color: var(--gold); background: rgba(184,150,62,0.04); }
+
+  .preset-name { font-size: 13px; font-weight: 500; color: var(--text); display: block; margin-bottom: 2px; }
+  .preset-desc { font-size: 11px; color: var(--muted); display: block; }
+
+  .toast {
+    position: fixed; bottom: 2rem; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--navy); color: #FDFBF7;
+    font-size: 13px; padding: 10px 20px;
+    border-radius: 40px; border: 1px solid rgba(184,150,62,0.3);
+    transition: transform 0.3s ease;
+    white-space: nowrap; z-index: 999; pointer-events: none;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.error { border-color: rgba(192,57,43,0.5); background: #2a0d0d; }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-logo">
+    <div class="logo-mark">H</div>
+    <div><div class="topbar-name">Hyecorp Property Group</div></div>
+  </div>
+  <div class="topbar-tag">Display Admin</div>
+</nav>
+
+<div class="container">
+
+  <div style="margin-bottom: 1.5rem; margin-top: 0.5rem;">
+    <div class="page-title">Reception display</div>
+    <div class="page-sub">Update the TV screen in reception — changes go live instantly</div>
+  </div>
+
+  <div class="preview-card">
+    <div class="preview-eyebrow">Reception</div>
+    <div class="preview-label-strip" id="prev-label">Welcome</div>
+    <div class="preview-name" id="prev-name">Please take a seat</div>
+    <div class="preview-sub" id="prev-sub">Your host will be with you shortly</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Greeting message</div>
+
+    <div class="field">
+      <label>Visitor name or main message</label>
+      <input type="text" id="inp-name" placeholder="e.g. Welcome, Sarah Johnson" oninput="updatePreview()" />
+      <div class="field-hint">This is the large text on the screen</div>
+    </div>
+
+    <div class="field">
+      <label>Top label</label>
+      <input type="text" id="inp-label" placeholder="e.g. Welcome / Meeting today" oninput="updatePreview()" />
+    </div>
+
+    <div class="field">
+      <label>Sub-message</label>
+      <input type="text" id="inp-sub" placeholder="e.g. Meeting room 2 — Level 3" oninput="updatePreview()" />
+      <div class="field-hint">Shown smaller beneath the name</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="push-btn" onclick="pushToDisplay()">Push to display</button>
+      <button class="btn btn-standby" onclick="setStandby()">Standby mode</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Quick presets</div>
+    <div class="preset-grid">
+      <button class="preset-btn" onclick="applyPreset('general')">
+        <span class="preset-name">General welcome</span>
+        <span class="preset-desc">Standby / no meeting</span>
+      </button>
+      <button class="preset-btn" onclick="applyPreset('meeting')">
+        <span class="preset-name">Meeting in progress</span>
+        <span class="preset-desc">Board room / conference</span>
+      </button>
+      <button class="preset-btn" onclick="applyPreset('interview')">
+        <span class="preset-name">Interview</span>
+        <span class="preset-desc">Candidate arrival</span>
+      </button>
+      <button class="preset-btn" onclick="applyPreset('closed')">
+        <span class="preset-name">Office closed</span>
+        <span class="preset-desc">After hours</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const SUPABASE_URL = 'https://ksanojfvxfcsjiazugay.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzYW5vamZ2eGZjc2ppYXp1Z2F5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxODYxNTksImV4cCI6MjA5MTc2MjE1OX0.Vsa2nAhOPzCO4XwbURnXe9miW3Z3o_LSTzY5Kqr_iBg';
+
+  const presets = {
+    general:   { label: 'Welcome',             name: 'Please take a seat', sub: 'Your host will be with you shortly' },
+    meeting:   { label: 'Meeting today',        name: 'Welcome',            sub: 'Please proceed to the boardroom — Level 2' },
+    interview: { label: 'Thank you for coming', name: 'Welcome',            sub: 'Please take a seat — someone will be with you shortly' },
+    closed:    { label: '',                     name: 'Office closed',      sub: 'We will reopen during business hours — thank you' }
+  };
+
+  function applyPreset(key) {
+    const p = presets[key];
+    document.getElementById('inp-label').value = p.label;
+    document.getElementById('inp-name').value  = p.name;
+    document.getElementById('inp-sub').value   = p.sub;
+    updatePreview();
+  }
+
+  function updatePreview() {
+    document.getElementById('prev-name').textContent  = document.getElementById('inp-name').value  || 'Please take a seat';
+    document.getElementById('prev-label').textContent = document.getElementById('inp-label').value || 'Welcome';
+    document.getElementById('prev-sub').textContent   = document.getElementById('inp-sub').value   || '';
+  }
+
+  async function pushToDisplay() {
+    const btn = document.getElementById('push-btn');
+    btn.disabled = true;
+    btn.textContent = 'Pushing…';
+
+    const ok = await upsert({
+      standby: false,
+      name:  document.getElementById('inp-name').value,
+      label: document.getElementById('inp-label').value,
+      sub:   document.getElementById('inp-sub').value
+    });
+
+    btn.disabled = false;
+    btn.textContent = 'Push to display';
+    showToast(ok ? '✓ Live — display updated' : 'Error — check connection', !ok);
+  }
+
+  async function setStandby() {
+    const ok = await upsert({ standby: true, name: 'Welcome', label: '', sub: 'Please sign in at reception' });
+    if (ok) {
+      document.getElementById('inp-label').value = '';
+      document.getElementById('inp-name').value  = 'Welcome';
+      document.getElementById('inp-sub').value   = 'Please sign in at reception';
+      updatePreview();
+    }
+    showToast(ok ? '✓ Standby mode set' : 'Error — check connection', !ok);
+  }
+
+  async function upsert(data) {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/display?id=eq.1`, {
+        method: 'PATCH',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(data)
+      });
+      return res.ok;
+    } catch(e) { return false; }
+  }
+
+  function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.toggle('error', isError);
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  async function loadCurrent() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/display?id=eq.1&select=*`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+      });
+      const rows = await res.json();
+      if (rows && rows[0]) {
+        const d = rows[0];
+        document.getElementById('inp-name').value  = d.name  || '';
+        document.getElementById('inp-label').value = d.label || '';
+        document.getElementById('inp-sub').value   = d.sub   || '';
+        updatePreview();
+      }
+    } catch(e) {}
+  }
+
+  loadCurrent();
+</script>
+</body>
+</html>
