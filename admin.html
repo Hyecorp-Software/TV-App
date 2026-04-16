@@ -261,7 +261,7 @@
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzYW5vamZ2eGZjc2ppYXp1Z2F5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxODYxNTksImV4cCI6MjA5MTc2MjE1OX0.Vsa2nAhOPzCO4XwbURnXe9miW3Z3o_LSTzY5Kqr_iBg';
 
   const presets = {
-    general:   { label: 'Welcome',             name: 'Please take a seat', sub: 'Your host will be with you shortly' },
+    general:   { label: 'Welcome',             name: 'Please ring the bell — a team member will be with you shortlyPlease take a seat', sub: '' },
     meeting:   { label: 'Meeting today',        name: 'Welcome',            sub: 'Please proceed to the boardroom — Level 2' },
     interview: { label: 'Thank you for coming', name: 'Welcome',            sub: 'Please take a seat — someone will be with you shortly' },
     closed:    { label: '',                     name: 'Office closed',      sub: 'We will reopen during business hours — thank you' }
@@ -299,11 +299,11 @@
   }
 
   async function setStandby() {
-    const ok = await upsert({ standby: true, name: 'Welcome', label: '', sub: 'Please sign in at reception' });
+    const ok = await upsert({ standby: true, name: 'Please ring the bell — a team member will be with you shortly', label: 'Welcome', sub: '' });
     if (ok) {
-      document.getElementById('inp-label').value = '';
-      document.getElementById('inp-name').value  = 'Welcome';
-      document.getElementById('inp-sub').value   = 'Please sign in at reception';
+      document.getElementById('inp-label').value = 'Welcome';
+      document.getElementById('inp-name').value  = 'Please ring the bell — a team member will be with you shortly';
+      document.getElementById('inp-sub').value   = '';
       updatePreview();
     }
     showToast(ok ? '✓ Standby mode set' : 'Error — check connection', !ok);
